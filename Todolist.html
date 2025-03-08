@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Task List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mustard: #EEBA0B;
+            --lilac: #C8A2C8;
+            --dark-text: #333333;
+            --light-text: #FFFFFF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        body {
+            background-color: #FBF8F1;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .bg-flower {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .flower1 {
+            top: 10%;
+            left: 10%;
+            transform: rotate(15deg);
+        }
+        
+        .flower2 {
+            top: 20%;
+            right: 15%;
+            transform: rotate(-10deg);
+        }
+        
+        .flower3 {
+            bottom: 15%;
+            left: 15%;
+            transform: rotate(30deg);
+        }
+        
+        .flower4 {
+            bottom: 10%;
+            right: 10%;
+            transform: rotate(-20deg);
+        }
+        
+        .flower5 {
+            top: 50%;
+            left: 5%;
+            transform: rotate(45deg);
+        }
+        
+        .flower6 {
+            top: 40%;
+            right: 5%;
+            transform: rotate(-45deg);
+        }
+        
+        .flower7 {
+            bottom: 30%;
+            left: 30%;
+            transform: rotate(60deg);
+        }
+        
+        .flower8 {
+            top: 70%;
+            right: 25%;
+            transform: rotate(-35deg);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--lilac);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-family: 'Sacramento', cursive;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            font-size: 3.2rem;
+        }
+        
+        .header p {
+            color: var(--light-text);
+            font-weight: 500;
+        }
+        
+        .cat-illustration {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        #new-task {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        #new-task:focus {
+            border-color: var(--mustard);
+            box-shadow: 0 0 0 3px rgba(238, 186, 11, 0.2);
+        }
+        
+        #add-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: var(--mustard);
+            color: white;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        #add-button:hover {
+            transform: scale(1.05);
+            background-color: #D9A91A;
+        }
+        
+        .task-list {
+            list-style-type: none;
+        }
+        
+        .task-item {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            animation: bounceIn 0.5s ease;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+        
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border-color: #e0e0e0;
+        }
+        
+        .task-item.completed {
+            background-color: #f9f9f9;
+            opacity: 0.8;
+        }
+        
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .task-text {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-button {
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .complete-button {
+            background-color: var(--lilac);
+            color: white;
+        }
+        
+        .complete-button:hover {
+            background-color: #B78FB7;
+            transform: scale(1.1);
+        }
+        
+        .delete-button {
+            background-color: var(--mustard);
+            color: white;
+        }
+        
+        .delete-button:hover {
+            background-color: #D9A91A;
+            transform: scale(1.1);
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: var(--light-text);
+            margin: 20px 0;
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        .stats {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+            70% {
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .clear-button {
+            background-color: var(--mustard);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            width: 100%;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .clear-button:hover {
+            background-color: #D9A91A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bunny-illustration {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+        
+        .flower-decoration {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            top: -20px;
+            right: -20px;
+            transform: rotate(15deg);
+            opacity: 0.7;
+        }
+        
+        .corner-flower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            opacity: 0.6;
+        }
+        
+        .top-left-flower {
+            top: -15px;
+            left: -15px;
+            transform: rotate(-30deg);
+        }
+        
+        .bottom-right-flower {
+            bottom: -15px;
+            right: -15px;
+            transform: rotate(45deg);
+        }
+        
+        .bottom-left-flower {
+            bottom: -15px;
+            left: -15px;
+            transform: rotate(15deg);
+        }
+    </style>
+</head>
+<body>
+    <svg class="bg-flower flower1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#C8A2C8"/>
+    </svg>
+    
+    <svg class="bg-flower flower2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#EEBA0B"/>
+    </svg>
+    
+    <svg class="bg-flower flower3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#C8A2C8"/>
+    </svg>
+    
+    <svg class="bg-flower flower4" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#EEBA0B"/>
+    </svg>
+    
+    <svg class="bg-flower flower5" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#C8A2C8"/>
+    </svg>
+    
+    <svg class="bg-flower flower6" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#EEBA0B"/>
+    </svg>
+    
+    <svg class="bg-flower flower7" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#C8A2C8"/>
+    </svg>
+    
+    <svg class="bg-flower flower8" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="70" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="70" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="30" cy="50" r="15" fill="#C8A2C8" opacity="0.7"/>
+        <circle cx="50" cy="50" r="12" fill="#EEBA0B"/>
+    </svg>
+    
+    <div class="container">
+        <svg class="corner-flower top-left-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="30" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="70" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="50" cy="70" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="30" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="50" cy="50" r="12" fill="white"/>
+        </svg>
+        
+        <svg class="corner-flower bottom-right-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="30" r="15" fill="white" opacity="0.7"/>
+            <circle cx="70" cy="50" r="15" fill="white" opacity="0.7"/>
+            <circle cx="50" cy="70" r="15" fill="white" opacity="0.7"/>
+            <circle cx="30" cy="50" r="15" fill="white" opacity="0.7"/>
+            <circle cx="50" cy="50" r="12" fill="#EEBA0B"/>
+        </svg>
+        
+        <svg class="corner-flower bottom-left-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="30" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="70" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="50" cy="70" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="30" cy="50" r="15" fill="#EEBA0B" opacity="0.7"/>
+            <circle cx="50" cy="50" r="12" fill="white"/>
+        </svg>
+        
+        <div class="header">
+            <svg class="cat-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="30" fill="#FFF1DC" stroke="#333" stroke-width="1"/>
+                <path d="M24 32L35 42L32 25Z" fill="#FFF1DC" stroke="#333" stroke-width="1"/>
+                <path d="M76 32L65 42L68 25Z" fill="#FFF1DC" stroke="#333" stroke-width="1"/>
+                <ellipse cx="38" cy="45" rx="5" ry="7" fill="#333"/>
+                <ellipse cx="62" cy="45" rx="5" ry="7" fill="#333"/>
+                <line x1="25" y1="55" x2="40" y2="55" stroke="#333" stroke-width="1"/>
+                <line x1="25" y1="60" x2="40" y2="57" stroke="#333" stroke-width="1"/>
+                <line x1="75" y1="55" x2="60" y2="55" stroke="#333" stroke-width="1"/>
+                <line x1="75" y1="60" x2="60" y2="57" stroke="#333" stroke-width="1"/>
+                <path d="M50 52L46 58H54Z" fill="#EEBA0B"/>
+                <path d="M46 58Q50 63 54 58" stroke="#333" stroke-width="1" fill="none"/>
+                <circle cx="33" cy="55" r="4" fill="#FFCDCD" opacity="0.6"/>
+                <circle cx="67" cy="55" r="4" fill="#FFCDCD" opacity="0.6"/>
+            </svg>
+            <h1>My Tasks</h1>
+            <p>Let's get things done today!</p>
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="new-task" placeholder="Add a new task...">
+            <button id="add-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4V20M4 12H20" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        
+        <ul id="task-list" class="task-list">
+        </ul>
+        
+        <div id="empty-message" class="empty-message">
+            <svg class="bunny-illustration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="60" r="25" fill="white" stroke="#ddd" stroke-width="1"/>
+                <path d="M35 40C30 25 40 15 45 25C45 15 55 15 55 25C60 15 70 25 65 40" fill="white" stroke="#ddd" stroke-width="1"/>
+                <circle cx="40" cy="55" r="3" fill="#EEBA0B"/>
+                <circle cx="60" cy="55" r="3" fill="#EEBA0B"/>
+                <circle cx="50" cy="65" r="4" fill="#FFCDCD"/>
+                <line x1="35" y1="65" x2="45" y2="67" stroke="#ddd" stroke-width="1"/>
+                <line x1="35" y1="69" x2="45" y2="68" stroke="#ddd" stroke-width="1"/>
+                <line x1="65" y1="65" x2="55" y2="67" stroke="#ddd" stroke-width="1"/>
+                <line x1="65" y1="69" x2="55" y2="68" stroke="#ddd" stroke-width="1"/>
+            </svg>
+            <p>Your task list is empty. Add something to do!</p>
+        </div>
+        
+        <div id="stats" class="stats" style="display: none;">
+            <span id="total-tasks">Total: 0</span>
+            <span id="completed-tasks">Completed: 0</span>
+        </div>
+        
+        <button id="clear-completed" class="clear-button" style="display: none;">
+            Clear Completed Tasks
+        </button>
+        
+        <svg class="flower-decoration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="30" r="15" fill="white" opacity="0.7"/>
+            <circle cx="70" cy="50" r="15" fill="white" opacity="0.7"/>
+            <circle cx="50" cy="70" r="15" fill="white" opacity="0.7"/>
+            <circle cx="30" cy="50" r="15" fill="white" opacity="0.7"/>
+            <circle cx="50" cy="50" r="12" fill="#EEBA0B"/>
+        </svg>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const newTaskInput = document.getElementById('new-task');
+            const addButton = document.getElementById('add-button');
+            const taskList = document.getElementById('task-list');
+            const emptyMessage = document.getElementById('empty-message');
+            const statsSection = document.getElementById('stats');
+            const totalTasksElement = document.getElementById('total-tasks');
+            const completedTasksElement = document.getElementById('completed-tasks');
+            const clearCompletedButton = document.getElementById('clear-completed');
+            
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            renderTasks();
+            updateStats();
+            
+            addButton.addEventListener('click', addTask);
+            
+            newTaskInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+            
+            clearCompletedButton.addEventListener('click', function() {
+                tasks = tasks.filter(task => !task.completed);
+                saveTasks();
+                renderTasks();
+                updateStats();
+            });
+            
+            function addTask() {
+                const taskText = newTaskInput.value.trim();
+                
+                if (taskText === '') return;
+                
+                const newTask = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false
+                };
+                
+                tasks.push(newTask);
+                saveTasks();
+                
+                newTaskInput.value = '';
+                renderTasks();
+                updateStats();
+            }
+            
+            function renderTasks() {
+                taskList.innerHTML = '';
+                
+                if (tasks.length === 0) {
+                    emptyMessage.style.display = 'block';
+                    statsSection.style.display = 'none';
+                    clearCompletedButton.style.display = 'none';
+                    return;
+                }
+                
+                emptyMessage.style.display = 'none';
+                statsSection.style.display = 'flex';
+                
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                    
+                    li.innerHTML = `
+                        <span class="task-text">${task.text}</span>
+                        <div class="task-actions">
+                            <button class="action-button complete-button" data-id="${task.id}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 12L10 17L19 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button class="action-button delete-button" data-id="${task.id}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    
+                    taskList.appendChild(li);
+                });
+                
+                document.querySelectorAll('.complete-button').forEach(button => {
+                    button.addEventListener('click', toggleComplete);
+                });
+                
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', deleteTask);
+                });
+            }
+            
+            function toggleComplete(e) {
+                const taskId = parseInt(e.currentTarget.getAttribute('data-id'));
+                
+                tasks = tasks.map(task => {
+                    if (task.id === taskId) {
+                        return { ...task, completed: !task.completed };
+                    }
+                    return task;
+                });
+                
+                saveTasks();
+                renderTasks();
+                updateStats();
+            }
+            
+            function deleteTask(e) {
+                const taskId = parseInt(e.currentTarget.getAttribute('data-id'));
+                
+                tasks = tasks.filter(task => task.id !== taskId);
+                
+                saveTasks();
+                renderTasks();
+                updateStats();
+            }
+            
+            function updateStats() {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.completed).length;
+                
+                totalTasksElement.textContent = `Total: ${totalTasks}`;
+                completedTasksElement.textContent = `Completed: ${completedTasks}`;
+                
+                clearCompletedButton.style.display = completedTasks > 0 ? 'block' : 'none';
+            }
+            
+            function saveTasks() {
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+        });
+    </script>
+</body>
+</html>
